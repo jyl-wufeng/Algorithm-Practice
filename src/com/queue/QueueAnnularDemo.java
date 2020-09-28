@@ -24,8 +24,15 @@ public class QueueAnnularDemo {
         queueAnnular.add(10);
         queueAnnular.add(11);
         queueAnnular.add(12);
+        queueAnnular.removeEnd();
         queueAnnular.add(13);
         queueAnnular.add(14);
+        QueueAnnular.intercept(queueAnnular);
+        System.out.println();
+        queueAnnular.remove(3);
+        QueueAnnular.intercept(queueAnnular);
+        System.out.println();
+        queueAnnular.remove(8);
         QueueAnnular.intercept(queueAnnular);
     }
 
@@ -39,14 +46,15 @@ class QueueAnnular {
     //队列长度
     public int maxSize = 10;
     //队列
-    public int[] data ;
+    public int[] data;
 
-    public QueueAnnular(int maxSize){
-        this.maxSize=maxSize;
-        this.data=new int[maxSize];
+    public QueueAnnular(int maxSize) {
+        this.maxSize = maxSize;
+        this.data = new int[maxSize];
     }
+
     public void add(int value) {
-        if ((top + maxSize - end) % maxSize == maxSize) {
+        if ((end + maxSize - top) % maxSize == maxSize) {
             throw new RuntimeException("队列已满");
         }
         data[end] = value;
@@ -61,6 +69,40 @@ class QueueAnnular {
         data[top] = 0;
         top = (top + 1) % maxSize;
         return temp;
+    }
+
+    public int removeEnd() {
+        if (top == end) {
+            throw new RuntimeException("队列为空");
+        }
+        int temp = data[end];
+        data[end] = 0;
+        end = (end - 1) % maxSize;
+        return temp;
+    }
+
+    /**
+     * 删除指定位置元素
+     *
+     * @param position 当前队列第几个
+     * @return 删除的值
+     */
+    public int remove(int position) {
+        if (position > (end + maxSize - top) % maxSize) {
+            throw new RuntimeException("指定位置的元素不存在");
+        }
+        //时间数组中的位置
+        int removePosition = (top + position-1) % maxSize;
+        int returnData = data[removePosition];
+        //从指定位置开始到结束位置，每个位置的值等于后一个位置的值
+        for (int i=-1; i<(end + maxSize - top) % maxSize;i++) {
+            data[removePosition] = data[(removePosition + 1)%maxSize];
+            removePosition = (removePosition + 1) % maxSize;
+        }
+        //原末尾位置置0并前移
+        data[end] = 0;
+        end = (end - 1) % maxSize;
+        return returnData;
     }
 
     public static void intercept(QueueAnnular queueAnnular) {
