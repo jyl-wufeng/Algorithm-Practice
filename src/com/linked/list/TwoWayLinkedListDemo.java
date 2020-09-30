@@ -7,6 +7,7 @@ import java.util.Comparator;
 public class TwoWayLinkedListDemo {
     public static void main(String[] args) {
         TwoWayLinkedList<User> twoWayLinkedList = new TwoWayLinkedList<>(20);
+        twoWayLinkedList.add(new User(12, "12号"));
         twoWayLinkedList.add(new User(1, "1号"));
         twoWayLinkedList.add(new User(4, "4号"));
         twoWayLinkedList.add(new User(2, "2号"));
@@ -16,8 +17,11 @@ public class TwoWayLinkedListDemo {
         twoWayLinkedList.remove(new User(2, "2号"));
         twoWayLinkedList.remove(new User(4, "4号"));
         twoWayLinkedList.insert(2, new User(11, "11号"));
+        twoWayLinkedList.add(new User(4, "4号"));
+        twoWayLinkedList.add(new User(3, "3号"));
         twoWayLinkedList.intercept();
         twoWayLinkedList.bubbleSort(Comparator.comparingInt(o -> o.age));
+        //twoWayLinkedList.QuickSort(Comparator.comparingInt(o -> o.age));
         System.out.println("---------------------------");
         twoWayLinkedList.intercept();
     }
@@ -122,43 +126,71 @@ class TwoWayLinkedList<T> {
             int start = 0;
             NodeT<T> temp = top;
             //是否发生交换
-            boolean replace = false;
+            isOrder = true;
             while (temp.next != null && start < end) {
                 temp = temp.next;
                 start++;
                 //如果下一个元素比当前小，交换位置
                 if (temp.next != null && c.compare(temp.data, temp.next.data) > 0) {
-                    //A B C D --B C 交换位置 B==temp
-                    NodeT<T> nA = temp.prev;
-                    NodeT<T> nc = temp.next;
-                    NodeT<T> nd = temp.next.next;
-                    //A的next指向C
-                    nA.next = temp.next;
-                    //B的prev指向C
-                    temp.prev = nc;
-                    //B的next指向D
-                    temp.next = nd;
-                    //C的上一个指向A
-                    nc.prev = nA;
-                    //C的下一个指向B
-                    nc.next = temp;
-                    //D的上一个指向B
-                    if (nd != null) {
-                        nd.prev = temp;
-                    }
-                    replace = true;
+                    T tempData=temp.data;
+                    temp.data=temp.next.data;
+                    temp.next.data=tempData;
+                    isOrder = false;
                 }
             }
             end--;
-            //没有发生交换则退出
-            if (!replace) {
-                return;
+        }
+    }
+
+    /**
+     * 快速排序
+     * @param c 比较器
+     */
+    public void QuickSort(Comparator<? super T> c){
+        QuickSortImplements(this.top.next,this.tail.prev,c);
+    }
+
+    private void QuickSortImplements(NodeT<T> start,NodeT<T> end,Comparator<? super T> c){
+        NodeT<T> left=start;
+        NodeT<T> right=end;
+        NodeT<T> middle=start;
+        while (start!=end){
+            //从后往前
+            while (start!=end&&c.compare(middle.data,end.data)<0){
+                end=end.prev;
             }
+            if(c.compare(middle.data,end.data)>0){
+                T temp=middle.data;
+                middle.data=end.data;
+                end.data=temp;
+                middle=end;
+            }
+            //从前往后
+            while (start!=end&&c.compare(middle.data,start.data)>0){
+                start=start.next;
+            }
+            if(c.compare(middle.data,start.data)<0){
+                T temp=middle.data;
+                middle.data=start.data;
+                start.data=temp;
+                middle=start;
+            }
+            if(start==end||start==end.next){
+                break;
+            }
+        }
+        if(left!=middle) {
+            System.out.println(left.data.toString()+"-111--"+middle.data.toString());
+            QuickSortImplements(left, middle, c);
+        }
+        if(middle.next!=right&&middle.next!=null) {
+            System.out.println(middle.next.data.toString()+"---"+right.data.toString());
+            QuickSortImplements(middle.next, right, c);
         }
     }
 }
 
-class NodeT<T> {
+class NodeT<T>{
     T data;
     NodeT<T> prev;
     NodeT<T> next;
