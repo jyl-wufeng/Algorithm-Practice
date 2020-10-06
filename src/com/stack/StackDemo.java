@@ -41,6 +41,7 @@ class Stack<T> {
         T temp=top.data;
         top=top.prev;
         top.next=null;
+        current--;
         return temp;
     }
 }
