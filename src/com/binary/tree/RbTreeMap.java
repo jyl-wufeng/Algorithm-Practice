@@ -24,7 +24,7 @@ public class RbTreeMap<K extends Comparable<K>, V> {
         rbTreeMap.put(14,14);
         rbTreeMap.put(15,15);
         rbTreeMap.put(16,16);
-        rbTreeMap.remove(14);
+        //rbTreeMap.remove(14);
         System.out.println("");
         System.out.println(rbTreeMap.get(12));
         rbTreeMap.printNode();
