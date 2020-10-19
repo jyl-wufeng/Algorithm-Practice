@@ -6,137 +6,147 @@ import java.util.List;
 
 public class RbTreeMap<K extends Comparable<K>, V> {
     public static void main(String[] args) {
-        RbTreeMap<Integer,Integer> rbTreeMap=new RbTreeMap<>();
-        rbTreeMap.put(1,1);
-        rbTreeMap.put(2,2);
-        rbTreeMap.put(3,3);
-        rbTreeMap.put(4,4);
-        rbTreeMap.put(5,5);
-        rbTreeMap.put(6,6);
-        rbTreeMap.put(7,7);
-        rbTreeMap.put(8,8);
-        rbTreeMap.put(8,8);
-        rbTreeMap.put(9,9);
-        rbTreeMap.put(10,10);
-        rbTreeMap.put(11,11);
-        rbTreeMap.put(12,12);
-        rbTreeMap.put(13,13);
-        rbTreeMap.put(14,14);
-        rbTreeMap.put(15,15);
-        rbTreeMap.put(16,16);
-        //rbTreeMap.remove(14);
-        System.out.println("");
-        System.out.println(rbTreeMap.get(12));
+        RbTreeMap<Integer, Integer> rbTreeMap = new RbTreeMap<>();
+        rbTreeMap.put(1, 1);
+        rbTreeMap.put(2, 2);
+        rbTreeMap.put(3, 3);
+        rbTreeMap.put(4, 4);
+        rbTreeMap.put(5, 5);
+        rbTreeMap.put(6, 6);
+        rbTreeMap.put(7, 7);
+        rbTreeMap.put(8, 8);
+        rbTreeMap.put(8, 8);
+        rbTreeMap.put(9, 9);
+        rbTreeMap.put(10, 10);
+        rbTreeMap.put(11, 11);
+        rbTreeMap.put(12, 12);
+        rbTreeMap.put(13, 13);
+        rbTreeMap.put(14, 14);
+        rbTreeMap.put(15, 15);
+        rbTreeMap.put(16, 16);
+        rbTreeMap.remove(9);
+        rbTreeMap.remove(3);
+        rbTreeMap.remove(7);
+        rbTreeMap.remove(2);
+        rbTreeMap.remove(1);
         rbTreeMap.printNode();
     }
-    RbNode<K,V> root;
+
+    RbNode<K, V> root;
     public static final boolean black = false;
     public static final boolean red = true;
-    private void setColour(RbNode<K,V> node, boolean colour) {
-        if(node!=null) {
+
+    private void setColour(RbNode<K, V> node, boolean colour) {
+        if (node != null) {
             node.colour = colour;
         }
     }
 
     /**
      * 右旋  r         O
-     *     /         /  \
-     *    o     >   v    r
-     *   /  \           /
-     *  v    w         w
+     * /         /  \
+     * o     >   v    r
+     * /  \           /
+     * v    w         w
+     *
      * @param r
      */
-    private void rightRotate(RbNode<K,V> r){
-        RbNode<K,V> w=r.leftNode.rightNode;
-        RbNode<K,V> o=r.leftNode;
+    private void rightRotate(RbNode<K, V> r) {
+        RbNode<K, V> w = r.leftNode.rightNode;
+        RbNode<K, V> o = r.leftNode;
         //o的右节点变成r
-        r.leftNode.rightNode=r;
+        r.leftNode.rightNode = r;
         //o的父节点变成r的父节点
-        o.parentNode=r.parentNode;
-        if(o.parentNode!=null) {
+        o.parentNode = r.parentNode;
+        if (o.parentNode != null) {
             if (o.parentNode.rightNode == r) {
                 o.parentNode.rightNode = o;
             } else {
                 o.parentNode.leftNode = o;
             }
-        }else {
-        root=o;
-    }
-        r.parentNode=o;
+        } else {
+            root = o;
+        }
+        r.parentNode = o;
         //w挂在r的左节点
-        r.leftNode=w;
-        if(w!=null){
-            w.parentNode=r;
+        r.leftNode = w;
+        if (w != null) {
+            w.parentNode = r;
         }
     }
 
     /**
      * 左旋
+     *
      * @param r
      */
-    private void leftRotate(RbNode<K,V> r){
-        RbNode<K,V> w=r.rightNode.leftNode;
-        RbNode<K,V> o=r.rightNode;
+    private void leftRotate(RbNode<K, V> r) {
+        RbNode<K, V> w = r.rightNode.leftNode;
+        RbNode<K, V> o = r.rightNode;
         //o的右节点变成r
-        r.rightNode.leftNode=r;
+        r.rightNode.leftNode = r;
         //o的父节点变成r的父节点
-        o.parentNode=r.parentNode;
-        if(o.parentNode!=null) {
-        if(o.parentNode.leftNode==r){
-            o.parentNode.leftNode=o;
-        }else{
-            o.parentNode.rightNode=o;
-        }}else {
-            root=o;
+        o.parentNode = r.parentNode;
+        if (o.parentNode != null) {
+            if (o.parentNode.leftNode == r) {
+                o.parentNode.leftNode = o;
+            } else {
+                o.parentNode.rightNode = o;
+            }
+        } else {
+            root = o;
         }
-        r.parentNode=o;
+        r.parentNode = o;
         //w挂在r的左节点
-        r.rightNode=w;
-        if(w!=null){
-            w.parentNode=r;
+        r.rightNode = w;
+        if (w != null) {
+            w.parentNode = r;
         }
     }
-    public V put(K key,V value){
-        RbNode<K,V> cdNode=root;
-        RbNode<K,V> insertPointNode = null;
+
+    public V put(K key, V value) {
+        RbNode<K, V> cdNode = root;
+        RbNode<K, V> insertPointNode = null;
         int cp = 0;
         //开始找插入点
-;        while (cdNode!=null){
-            insertPointNode=cdNode;
-            cp=cdNode.key.compareTo(key);
-            if(cp<0){
-                cdNode=cdNode.rightNode;
-            }else if(cp>0){
-                cdNode=cdNode.leftNode;
-            }else {//找到一样的key直接替换value并结束
-                cdNode.value=value;
+        ;
+        while (cdNode != null) {
+            insertPointNode = cdNode;
+            cp = cdNode.key.compareTo(key);
+            if (cp < 0) {
+                cdNode = cdNode.rightNode;
+            } else if (cp > 0) {
+                cdNode = cdNode.leftNode;
+            } else {//找到一样的key直接替换value并结束
+                cdNode.value = value;
                 return value;
             }
         }
-        RbNode<K,V> insertNode=new RbNode<K,V>(insertPointNode,key,value);
-        if(insertPointNode==null){//如果根节点为空直接添加
-            this.root=insertNode;
-        }else if(cp<0){
-            insertPointNode.rightNode=insertNode;
-        }else {
-            insertPointNode.leftNode=insertNode;
+        RbNode<K, V> insertNode = new RbNode<K, V>(insertPointNode, key, value);
+        if (insertPointNode == null) {//如果根节点为空直接添加
+            this.root = insertNode;
+        } else if (cp < 0) {
+            insertPointNode.rightNode = insertNode;
+        } else {
+            insertPointNode.leftNode = insertNode;
         }
         putRegulate(insertNode);
         return value;
     }
-    private void putRegulate(RbNode<K,V> r){
-        if(r.parentNode==null){//根节点直接变颜色
-            setColour(r,black);
+
+    private void putRegulate(RbNode<K, V> r) {
+        if (r.parentNode == null) {//根节点直接变颜色
+            setColour(r, black);
             return;
         }
-        while (r!=null&&r.parentNode!=null&&r.parentNode.colour==red){
-            if (r.parentNode==r.parentNode.parentNode.leftNode){//左倾
-                if(r.parentNode.parentNode.rightNode!=null&&r.parentNode.parentNode.rightNode.colour==red){//对于234树分裂情况，直接变颜色 中间节点变红，两边变黑
-                    setColour(r.parentNode.parentNode,red);
-                    setColour(r.parentNode.parentNode.rightNode,black);
-                    setColour(r.parentNode.parentNode.leftNode,black);
-                    r=r.parentNode.parentNode;
-                }else {
+        while (r != null && r.parentNode != null && r.parentNode.colour == red) {
+            if (r.parentNode == r.parentNode.parentNode.leftNode) {//左倾
+                if (r.parentNode.parentNode.rightNode != null && r.parentNode.parentNode.rightNode.colour == red) {//对于234树分裂情况，直接变颜色 中间节点变红，两边变黑
+                    setColour(r.parentNode.parentNode, red);
+                    setColour(r.parentNode.parentNode.rightNode, black);
+                    setColour(r.parentNode.parentNode.leftNode, black);
+                    r = r.parentNode.parentNode;
+                } else {
                     if (r == r.parentNode.rightNode) {//是右节点 先调整为插入左节点的情况
                         leftRotate(r.parentNode);
                         r = r.leftNode;
@@ -145,13 +155,13 @@ public class RbTreeMap<K extends Comparable<K>, V> {
                     setColour(r.parentNode, black);
                     setColour(r.parentNode.rightNode, red);
                 }
-            }else {//右倾 操作一样，取反
-                if(r.parentNode.parentNode.leftNode!=null&&r.parentNode.parentNode.leftNode.colour==red){
-                    setColour(r.parentNode.parentNode,red);
-                    setColour(r.parentNode.parentNode.rightNode,black);
-                    setColour(r.parentNode.parentNode.leftNode,black);
-                    r=r.parentNode.parentNode;
-                }else {
+            } else {//右倾 操作一样，取反
+                if (r.parentNode.parentNode.leftNode != null && r.parentNode.parentNode.leftNode.colour == red) {
+                    setColour(r.parentNode.parentNode, red);
+                    setColour(r.parentNode.parentNode.rightNode, black);
+                    setColour(r.parentNode.parentNode.leftNode, black);
+                    r = r.parentNode.parentNode;
+                } else {
                     if (r == r.parentNode.leftNode) {
                         rightRotate(r.parentNode);
                         r = r.rightNode;
@@ -162,80 +172,135 @@ public class RbTreeMap<K extends Comparable<K>, V> {
                 }
             }
         }
-        setColour(root,black);
+        setColour(root, black);
     }
-    public V remove(K key){
-        RbNode<K,V> r=getNode(key);
-        if(r==null){
+
+    public void removeRegulate(RbNode<K, V> r) {
+        while (r != null && r != root && r.colour == black) {
+            if (r == r.parentNode.leftNode) {//右倾
+                if (r.parentNode.rightNode != null && (r.parentNode.rightNode.leftNode != null || r.parentNode.rightNode.rightNode != null)) {//兄弟节点可借
+                    if (r.parentNode.rightNode.rightNode == null) {//兄弟节点只有一个左节点，需要先右旋
+                        rightRotate(r.parentNode.rightNode);
+                    }
+                    //左旋变色
+                    leftRotate(r.parentNode);
+                    setColour(r.parentNode.rightNode, red);
+                    setColour(r.parentNode.parentNode, r.parentNode.colour);
+                    setColour(r.parentNode, black);
+                    setColour(r.parentNode.parentNode.rightNode, black);
+                    break;
+                } else if (r.parentNode.colour == red) {//父亲节点可借
+                    setColour(r.parentNode, black);
+                    setColour(r.parentNode.rightNode, red);
+                    setColour(r, red);
+                    break;
+                } else {
+                    setColour(r.parentNode, black);
+                    setColour(r.parentNode.rightNode, red);
+                    r = r.parentNode;
+                }
+            } else {
+                if (r.parentNode.leftNode != null && (r.parentNode.leftNode.rightNode != null || r.parentNode.leftNode.leftNode != null)) {//兄弟节点可借
+                    if (r.parentNode.leftNode.leftNode == null) {//兄弟节点只有一个左节点，需要先右旋
+                        leftRotate(r.parentNode.leftNode);
+                    }
+                    //左旋变色
+                    leftRotate(r.parentNode);
+                    setColour(r.parentNode.leftNode, red);
+                    setColour(r.parentNode.parentNode, r.parentNode.colour);
+                    setColour(r.parentNode, black);
+                    setColour(r.parentNode.parentNode.leftNode, black);
+                    break;
+                } else if (r.parentNode.colour == red) {//父亲节点可借
+                    setColour(r.parentNode, black);
+                    setColour(r.parentNode.leftNode, red);
+                    setColour(r, red);
+                    break;
+                } else {
+                    setColour(r.parentNode, black);
+                    setColour(r.parentNode.leftNode, red);
+                    r = r.parentNode;
+                }
+            }
+        }
+    }
+
+    public V remove(K key) {
+        RbNode<K, V> r = getNode(key);
+        if (r == null) {
             return null;
         }
-        RbNode<K,V> replaceNode=null;
-        RbNode<K,V> temp;
-        if(r==root){
-            this.root=null;
+        RbNode<K, V> replaceNode = null;
+        RbNode<K, V> temp;
+        if (r == root) {
+            this.root = null;
             return r.value;
-        }else if(r.rightNode!=null) {//找后继节点
-             temp=r.rightNode;
-            while (temp!=null){
-                replaceNode=temp;
-                temp=temp.leftNode;
+        } else if (r.rightNode != null) {//找后继节点
+            temp = r.rightNode;
+            while (temp != null) {
+                replaceNode = temp;
+                temp = temp.leftNode;
             }
-        }else if(r.leftNode!=null){//找前驱节点
-            temp=r.leftNode;
-            while (temp!=null){
-                replaceNode=temp;
-                temp=temp.leftNode;
+        } else if (r.leftNode != null) {//找前驱节点
+            temp = r.leftNode;
+            while (temp != null) {
+                replaceNode = temp;
+                temp = temp.leftNode;
             }
         }
-        if(replaceNode!=null){
-            r.value=replaceNode.value;
-            r.key=replaceNode.key;
-        }else {
-            replaceNode=r;
+        if (replaceNode != null) {
+            r.value = replaceNode.value;
+            r.key = replaceNode.key;
+        } else {
+            replaceNode = r;
         }
-        RbNode<K,V> kn=replaceNode.leftNode==null?replaceNode.rightNode:replaceNode.leftNode;
-        if(kn!=null){
-            kn.parentNode=replaceNode.parentNode;
+        removeRegulate(replaceNode);
+        RbNode<K, V> kn = replaceNode.leftNode == null ? replaceNode.rightNode : replaceNode.leftNode;
+        if (kn != null) {
+            kn.parentNode = replaceNode.parentNode;
         }
-        if(replaceNode==replaceNode.parentNode.leftNode){
-            replaceNode.parentNode.leftNode=kn;
-        }else {
-            replaceNode.parentNode.rightNode=kn;
+        if (replaceNode == replaceNode.parentNode.leftNode) {
+            replaceNode.parentNode.leftNode = kn;
+        } else {
+            replaceNode.parentNode.rightNode = kn;
         }
         return replaceNode.value;
     }
-    public V get(K key){
-        RbNode<K,V> r=getNode(key);
-        if(r!=null){
+
+    public V get(K key) {
+        RbNode<K, V> r = getNode(key);
+        if (r != null) {
             return r.value;
-        }else {
+        } else {
             return null;
         }
     }
-    private RbNode<K,V> getNode(K key){
-        RbNode<K,V> r=root;
+
+    private RbNode<K, V> getNode(K key) {
+        RbNode<K, V> r = root;
         int cp;
-        while (r!=null){
-            cp=r.key.compareTo(key);
-            if(cp>0){
-                r=r.leftNode;
-            }else if(cp<0){
-                r=r.rightNode;
-            }else {
+        while (r != null) {
+            cp = r.key.compareTo(key);
+            if (cp > 0) {
+                r = r.leftNode;
+            } else if (cp < 0) {
+                r = r.rightNode;
+            } else {
                 return r;
             }
         }
         return null;
     }
+
     public static class RbNode<K extends Comparable<K>, V> {
         private boolean colour;
-        private RbNode<K,V> leftNode;
-        private RbNode<K,V> rightNode;
-        private RbNode<K,V> parentNode;
+        private RbNode<K, V> leftNode;
+        private RbNode<K, V> rightNode;
+        private RbNode<K, V> parentNode;
         private K key;
         private V value;
 
-        public RbNode( RbNode<K,V> parentNode, K key, V value) {
+        public RbNode(RbNode<K, V> parentNode, K key, V value) {
             this.colour = red;
             this.parentNode = parentNode;
             this.key = key;
@@ -244,9 +309,7 @@ public class RbTreeMap<K extends Comparable<K>, V> {
     }
 
 
-
-
-    public  <T extends Comparable<?>> void printNode() {
+    public <T extends Comparable<?>> void printNode() {
         int maxLevel = maxLevel(root);
 
         printNodeInternal(Collections.singletonList(root), 1, maxLevel);
@@ -266,9 +329,9 @@ public class RbTreeMap<K extends Comparable<K>, V> {
         List<RbNode> newNodes = new ArrayList<RbNode>();
         for (RbNode node : nodes) {
             if (node != null) {
-                if(node.colour){
+                if (node.colour) {
                     System.out.print("\033[31;4m" + node.key + "\033[0m");
-                }else {
+                } else {
                     System.out.print(node.key);
                 }
                 //System.out.print(node.key);
@@ -297,7 +360,7 @@ public class RbTreeMap<K extends Comparable<K>, V> {
                 else
                     printWhitespaces(1);
 
-               printWhitespaces(i + i - 1);
+                printWhitespaces(i + i - 1);
 
                 if (nodes.get(j).rightNode != null)
                     System.out.print("\\");
